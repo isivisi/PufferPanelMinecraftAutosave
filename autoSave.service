@@ -1,0 +1,14 @@
+[Unit]
+Description=autosave minecraft pufferpanel
+
+[Service]
+Type=simple
+WorkingDirectory=/home/isivisi/scripts/minecraftAutoSave
+User=isivisi
+ExecStart= /usr/bin/python3 /home/isivisi/scripts/minecraftAutoSave/minecraftAutoSave.py
+Restart=on-failure
+RestartSec=10
+#KillMode=process
+
+[Install]
+WantedBy=multi-user.target
