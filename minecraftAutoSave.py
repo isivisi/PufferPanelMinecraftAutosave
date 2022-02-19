@@ -89,9 +89,12 @@ lastSaveTime = 0
 while True: # 1 second tick
 
     for server in servers:
-        if (serverPlayerStatus[server]['shouldSave'] == False and getPlayerCount(server) > 0):
-            print('Detected player join, marking ' + server + 'to save on next interval')
-            serverPlayerStatus[server]['shouldSave'] = True
+        if (serverRunning(server)):
+            if (serverPlayerStatus[server]['shouldSave'] == False and getPlayerCount(server) > 0):
+                print('Detected player join, marking ' + server + 'to save on next interval')
+                serverPlayerStatus[server]['shouldSave'] = True
+        else:
+            serverPlayerStatus[server]['shouldSave'] = False
 
     curTime = int(time.time())
 
@@ -101,7 +104,7 @@ while True: # 1 second tick
         for server in servers:
             if serverPlayerStatus[server]['shouldSave']: # if we detected a player was online since last tick
                 print("Players detected since last save, running autosave on " + server)
-                sendToConsole(server, 'say Players detected, saving world :)')
+                sendToConsole(server, 'say Players detected, saving world <3')
                 sendToConsole(server, 'save-all')
                 serverPlayerStatus[server]['shouldSave'] = False
         
