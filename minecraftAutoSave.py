@@ -23,7 +23,7 @@ save_interval = int(os.environ.get("SAVE_INTERVAL"))
 print("Running autosave daemon")
 
 serverPlayerStatus = {} # if server should be saved on next tick
-for server in servers: serverPlayerStatus[server] = {'shouldSave': False, 'lastUserLog': None}
+for server in servers: serverPlayerStatus[server] = {'shouldSave': False, 'lastUserLog': None, 'players': 0}
 
 def getAccessToken():
     response = requests.post(
@@ -48,7 +48,20 @@ def sendToConsole(server, command):
         },
     )
 
-def getServerLogs(server):
+def getPlayerCount(server):
+    logs = getServerLogs(server)
+    sendToConsole(server, 'list')
+    time.sleep(0.1)
+    for log in reversed(logs):
+        if ('players online' in log):
+            result = re.search(r'There are ([0-9])* of a max of ([0-9]*)', log)
+            if (result):
+                return int(result.group(1))
+                break
+    return 0
+
+
+def getServerLogs(server, ):
     response = requests.get(
         api_endpoint + '/daemon/server/' + server + '/console',
         headers= {
@@ -76,13 +89,9 @@ lastSaveTime = 0
 while True: # 1 second tick
 
     for server in servers:
-        logs = getServerLogs(server)
-        for log in reversed(logs):
-            if 'logged in with entity id' in log:
-                if (serverPlayerStatus[server]['lastUserLog'] != log):
-                    print('Detected player join, marking ' + server + 'to save on next interval')
-                    serverPlayerStatus[server]['shouldSave'] = True
-                    serverPlayerStatus[server]['lastUserLog'] = log
+        if (serverPlayerStatus[server]['shouldSave'] == False and getPlayerCount(server) > 0):
+            print('Detected player join, marking ' + server + 'to save on next interval')
+            serverPlayerStatus[server]['shouldSave'] = True
 
     curTime = int(time.time())
 
