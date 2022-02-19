@@ -25,7 +25,11 @@ print("Running autosave daemon")
 serverPlayerStatus = {} # if server should be saved on next tick
 for server in servers: serverPlayerStatus[server] = {'shouldSave': False, 'lastUserLog': None, 'players': 0}
 
+access_token = None
 def getAccessToken():
+
+    if hasattr(getAccessToken, 'access_token'): return getAccessToken.access_token
+
     response = requests.post(
         api_endpoint + '/oauth2/token',
         data={
@@ -35,6 +39,7 @@ def getAccessToken():
             'response_type': 'code'},
             auth=(client_id, client_secret),
     )
+    getAccessToken.access_token = response.json()["access_token"]
     return response.json()["access_token"]
 
 def sendToConsole(server, command):
@@ -104,8 +109,8 @@ while True: # 1 second tick
         for server in servers:
             if serverPlayerStatus[server]['shouldSave']: # if we detected a player was online since last tick
                 print("Players detected since last save, running autosave on " + server)
-                sendToConsole(server, 'say Players detected, saving world <3')
-                sendToConsole(server, 'save-all')
+                #sendToConsole(server, 'say Players detected, saving world <3')
+                #sendToConsole(server, 'save-all')
                 serverPlayerStatus[server]['shouldSave'] = False
         
     time.sleep(60)
