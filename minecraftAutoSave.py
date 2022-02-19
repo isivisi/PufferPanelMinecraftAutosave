@@ -66,7 +66,7 @@ def getPlayerCount(server):
     return 0
 
 
-def getServerLogs(server, ):
+def getServerLogs(server):
     response = requests.get(
         api_endpoint + '/daemon/server/' + server + '/console',
         headers= {
