@@ -109,8 +109,8 @@ while True: # 1 second tick
         for server in servers:
             if serverPlayerStatus[server]['shouldSave']: # if we detected a player was online since last tick
                 print("Players detected since last save, running autosave on " + server)
-                #sendToConsole(server, 'say Players detected, saving world <3')
-                #sendToConsole(server, 'save-all')
+                sendToConsole(server, 'say Players detected, saving world <3')
+                sendToConsole(server, 'save-all')
                 serverPlayerStatus[server]['shouldSave'] = False
         
     time.sleep(60)
