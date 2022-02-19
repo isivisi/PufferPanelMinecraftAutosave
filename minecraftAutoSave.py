@@ -59,7 +59,7 @@ def getPlayerCount(server):
     time.sleep(0.1)
     for log in reversed(logs):
         if ('players online' in log):
-            result = re.search(r'There are ([0-9])* of a max of ([0-9]*)', log)
+            result = re.search(r'There are ([0-9]*) of a max of ([0-9]*)', log)
             if (result):
                 return int(result.group(1))
                 break
