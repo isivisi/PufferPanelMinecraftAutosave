@@ -105,5 +105,4 @@ while True: # 1 second tick
                 sendToConsole(server, 'save-all')
                 serverPlayerStatus[server]['shouldSave'] = False
         
-    #time.sleep(60 * save_interval)
-    time.sleep(1)
+    time.sleep(60)
